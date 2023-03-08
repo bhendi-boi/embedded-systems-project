@@ -21,6 +21,14 @@ void gameSetup()
   oled.display();
 }
 
+void paintBall(int x, int y)
+{
+  oled.setCursor(x, y);
+  oled.println(".");
+  oled.display();
+  delay(100);
+}
+
 void setup()
 {
   // put your setup code here, to run once:
@@ -48,5 +56,11 @@ void setup()
 
 void loop()
 {
-  delay(10000);
+  delay(1000);
+  int x = 10;
+  int y = 10;
+  while (true)
+  {
+    paintBall(x, y);
+  }
 }
