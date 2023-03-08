@@ -8,6 +8,19 @@
 // declare an SSD1306 display object connected to I2C
 Adafruit_SSD1306 oled(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
+#define BAR_WIDTH 15
+#define BAR_HEIGHT 5
+
+void gameSetup(void);
+void gameSetup()
+{
+  oled.clearDisplay();
+  oled.fillRect(0, 20, BAR_HEIGHT, BAR_WIDTH, WHITE);
+  oled.display();
+  oled.fillRect(SCREEN_WIDTH - BAR_HEIGHT - 2, 20, BAR_HEIGHT, BAR_WIDTH, WHITE);
+  oled.display();
+}
+
 void setup()
 {
   // put your setup code here, to run once:
@@ -24,14 +37,16 @@ void setup()
   delay(2000);         // wait for initializing
   oled.clearDisplay(); // clear display
 
-  oled.setTextSize(1);          // text size
-  oled.setTextColor(WHITE);     // text color
-  oled.setCursor(0, 10);        // position to display
-  oled.println("Hello World!"); // text to display
-  oled.display();               // show on OLED
+  oled.setTextSize(1);
+  oled.setTextColor(WHITE);
+  oled.setCursor(0, 10);
+  oled.println("Setup complete");
+  oled.display();
+  delay(500);
+  gameSetup();
 }
 
 void loop()
 {
-  // put your main code here, to run repeatedly:
+  delay(10000);
 }
