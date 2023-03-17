@@ -59,8 +59,29 @@ void loop()
   delay(1000);
   int x = 10;
   int y = 10;
+  bool xDir = true;
+  bool yDir = false;
   while (true)
   {
-    paintBall(x, y);
+    if (xDir)
+    {
+      x += 10;
+    }
+    else
+    {
+      x -= 10;
+    }
+    if (yDir)
+    {
+      y += 5;
+    }
+    else
+    {
+      y -= 5;
+    }
+    if (y >= 60 && x < 120)
+    {
+      yDir = false;
+    }
   }
 }
