@@ -6,9 +6,10 @@ by [Jyothikrishna](https://github.com/bhendi-boi) and [Advaita Kartikeya](https:
 
 - take analog input from joysticks
 - write to led screen
-- find similar proj on github
 
 ## Resources
+
+- [Similar project on github](https://github.com/eholk/Arduino-Pong/blob/master/pong.ino)
 
 - [Interfacing OLED display with Arduino](https://arduinogetstarted.com/tutorials/arduino-oled)
 - [Analog joystick inputs on amazon](https://www.amazon.in/Robocraze-Joystick-Module-PS2-Set/dp/B086VZH739/ref=sr_1_1?crid=145H0YY0Z3JL2&keywords=analog+joystick+arduino&qid=1678278830&sprefix=analog+joystick%2Caps%2C358&sr=8-1)
