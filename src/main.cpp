@@ -21,6 +21,9 @@ uint8_t ball_x = 64, ball_y = 32;
 // ? variables for storing ball direction
 uint8_t ball_dir_x = 1, ball_dir_y = 1;
 
+// ? variable for storing score
+uint8_t score = 0;
+
 unsigned long ball_update;
 unsigned long paddle_update;
 const uint8_t CPU_X = 12;
@@ -59,7 +62,6 @@ void setup()
   oled.println("Setup complete");
   oled.display();
   delay(500);
-  // gameSetup();
   oled.clearDisplay();
 }
 
@@ -80,6 +82,11 @@ void loop()
                                        : 0;
   down_state = up_state == -1 ? -1 : !up_state;
 
+  // ? displaying score
+  oled.setCursor(SCREEN_WIDTH / 2, 10);
+  // oled.println(score);
+  Serial.print(score);
+
   if (time > ball_update)
   {
     uint8_t new_x = ball_x + ball_dir_x;
@@ -88,6 +95,10 @@ void loop()
     // Check if we hit the vertical walls
     if (new_x == 0 || new_x == 127)
     {
+      if (new_x == 127)
+      {
+        score++;
+      }
       ball_dir_x = -ball_dir_x;
       new_x += ball_dir_x + ball_dir_x;
     }
