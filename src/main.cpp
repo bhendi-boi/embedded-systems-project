@@ -3,30 +3,38 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
-#define SCREEN_WIDTH 128 // OLED display width,  in pixels
-#define SCREEN_HEIGHT 64 // OLED display height, in pixels
-// declare an SSD1306 display object connected to I2C
+#define SCREEN_WIDTH 128 // OLED oled width,  in pixels
+#define SCREEN_HEIGHT 64 // OLED oled height, in pixels
+// declare an SSD1306 oled object connected to I2C
 Adafruit_SSD1306 oled(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
-#define BAR_WIDTH 15
-#define BAR_HEIGHT 5
+#define joyX A0
+#define joyY A1
 
-void gameSetup(void);
-void gameSetup()
-{
-  oled.clearDisplay();
-  oled.fillRect(0, 20, BAR_HEIGHT, BAR_WIDTH, WHITE);
-  oled.display();
-  oled.fillRect(SCREEN_WIDTH - BAR_HEIGHT - 2, 20, BAR_HEIGHT, BAR_WIDTH, WHITE);
-  oled.display();
-}
+const unsigned long PADDLE_RATE = 33;
+const unsigned long BALL_RATE = 16;
+const uint8_t PADDLE_HEIGHT = 24;
 
-void paintBall(int x, int y)
+// ? vairbales for storing ball coordinates
+uint8_t ball_x = 64, ball_y = 32;
+
+// ? variables for storing ball direction
+uint8_t ball_dir_x = 1, ball_dir_y = 1;
+
+unsigned long ball_update;
+unsigned long paddle_update;
+const uint8_t CPU_X = 12;
+uint8_t cpu_y = 16;
+
+// ? player coordinates
+const uint8_t PLAYER_X = 115;
+uint8_t player_y = 16;
+
+// ? global state
+int xValue, xMap;
+
+void getData()
 {
-  oled.setCursor(x, y);
-  oled.println(".");
-  oled.display();
-  delay(100);
 }
 
 void setup()
@@ -51,37 +59,111 @@ void setup()
   oled.println("Setup complete");
   oled.display();
   delay(500);
-  gameSetup();
+  // gameSetup();
+  oled.clearDisplay();
 }
 
 void loop()
 {
-  delay(1000);
-  int x = 10;
-  int y = 10;
-  bool xDir = true;
-  bool yDir = false;
-  while (true)
+  // ? input from joystick
+  xValue = analogRead(joyX);
+  xMap = map(xValue, 0, 1023, 0, 7);
+
+  bool update = false;
+  unsigned long time = millis();
+
+  // ? -1 represents no change
+  // ? 0 represents down and 1 represnts up
+  int up_state = 0;
+  int down_state = 0;
+  up_state = xMap == 3 ? -1 : xMap > 3 ? 1
+                                       : 0;
+  down_state = up_state == -1 ? -1 : !up_state;
+
+  if (time > ball_update)
   {
-    if (xDir)
+    uint8_t new_x = ball_x + ball_dir_x;
+    uint8_t new_y = ball_y + ball_dir_y;
+
+    // Check if we hit the vertical walls
+    if (new_x == 0 || new_x == 127)
     {
-      x += 10;
+      ball_dir_x = -ball_dir_x;
+      new_x += ball_dir_x + ball_dir_x;
     }
-    else
+
+    // Check if we hit the horizontal walls.
+    if (new_y == 0 || new_y == 63)
     {
-      x -= 10;
+      ball_dir_y = -ball_dir_y;
+      new_y += ball_dir_y + ball_dir_y;
     }
-    if (yDir)
+
+    // Check if we hit the CPU paddle
+    if (new_x == CPU_X && new_y >= cpu_y && new_y <= cpu_y + PADDLE_HEIGHT)
     {
-      y += 5;
+      ball_dir_x = -ball_dir_x;
+      new_x += ball_dir_x + ball_dir_x;
     }
-    else
+
+    // Check if we hit the player paddle
+    if (new_x == PLAYER_X && new_y >= player_y && new_y <= player_y + PADDLE_HEIGHT)
     {
-      y -= 5;
+      ball_dir_x = -ball_dir_x;
+      new_x += ball_dir_x + ball_dir_x;
     }
-    if (y >= 60 && x < 120)
-    {
-      yDir = false;
-    }
+
+    oled.drawPixel(ball_x, ball_y, BLACK);
+    oled.drawPixel(new_x, new_y, WHITE);
+    ball_x = new_x;
+    ball_y = new_y;
+
+    ball_update += BALL_RATE;
+
+    update = true;
   }
+
+  if (time > paddle_update)
+  {
+    paddle_update += PADDLE_RATE;
+
+    // CPU paddle
+    oled.drawFastVLine(CPU_X, cpu_y, PADDLE_HEIGHT, BLACK);
+    const uint8_t half_paddle = PADDLE_HEIGHT >> 1;
+    if (cpu_y + half_paddle > ball_y)
+    {
+      cpu_y -= 1;
+    }
+    if (cpu_y + half_paddle < ball_y)
+    {
+      cpu_y += 1;
+    }
+    if (cpu_y < 1)
+      cpu_y = 1;
+    if (cpu_y + PADDLE_HEIGHT > 63)
+      cpu_y = 63 - PADDLE_HEIGHT;
+    oled.drawFastVLine(CPU_X, cpu_y, PADDLE_HEIGHT, WHITE);
+
+    // Player paddle
+    oled.drawFastVLine(PLAYER_X, player_y, PADDLE_HEIGHT, BLACK);
+    if (up_state)
+    {
+      player_y -= 1;
+    }
+    if (down_state)
+    {
+      player_y += 1;
+    }
+    up_state = down_state = false;
+    if (player_y < 1)
+      player_y = 1;
+    if (player_y + PADDLE_HEIGHT > 63)
+      player_y = 63 - PADDLE_HEIGHT;
+    oled.drawFastVLine(PLAYER_X, player_y, PADDLE_HEIGHT, WHITE);
+
+    update = true;
+  }
+
+  if (update)
+    oled.display();
 }
