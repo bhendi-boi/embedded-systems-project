@@ -21,9 +21,6 @@ uint8_t ball_x = 64, ball_y = 32;
 // ? variables for storing ball direction
 uint8_t ball_dir_x = 1, ball_dir_y = 1;
 
-// ? variable for storing score
-uint8_t score = 0;
-
 unsigned long ball_update;
 unsigned long paddle_update;
 const uint8_t CPU_X = 12;
@@ -36,8 +33,71 @@ uint8_t player_y = 16;
 // ? global state
 int xValue, xMap;
 
-void getData()
+// ? variable for storing score
+uint8_t score = 0;
+uint8_t CPUScore = 0;
+
+int findWinner()
 {
+  if (score >= 3)
+  {
+    return 1;
+  }
+  if (CPUScore >= 3)
+  {
+    return 0;
+  }
+  return -1;
+}
+
+// ! TODO make this function display the winner
+void displayWinner(int winner)
+{
+  if (winner == -1)
+  {
+    return;
+  }
+  if (winner == 1)
+  {
+    delay(1000);
+    oled.setCursor(SCREEN_HEIGHT / 2, SCREEN_WIDTH / 2);
+    oled.println("You Won :)");
+    oled.display();
+    delay(5000);
+
+    return;
+  }
+  else
+  {
+    delay(1000);
+    oled.setCursor(SCREEN_HEIGHT / 2, SCREEN_WIDTH / 2);
+    oled.println("You Lose :'(");
+    oled.display();
+    delay(5000);
+    return;
+  }
+}
+
+void reset(int *winner)
+{
+  if (*winner == -1)
+  {
+    return;
+  }
+  // resetting scores
+  score = 0;
+  CPUScore = 0;
+  // resetting winner
+  *winner = -1;
+  // resetting player Y coordinate
+  player_y = 16;
+  // remoivng last ball
+  oled.drawPixel(ball_x, ball_y, BLACK);
+  // resetting ball position and directions
+  ball_x = 64;
+  ball_y = 32;
+  ball_dir_x = 1;
+  ball_dir_y = 1;
 }
 
 void setup()
@@ -67,6 +127,12 @@ void setup()
 
 void loop()
 {
+  // ? determining winner and resetting thr game if a
+  // ? winner is found
+  int winner = findWinner();
+  displayWinner(winner);
+  reset(&winner);
+
   // ? input from joystick
   xValue = analogRead(joyX);
   xMap = map(xValue, 0, 1023, 0, 7);
@@ -95,10 +161,7 @@ void loop()
     // Check if we hit the vertical walls
     if (new_x == 0 || new_x == 127)
     {
-      if (new_x == 127)
-      {
-        score++;
-      }
+      new_x == 127 ? score++ : CPUScore++;
       ball_dir_x = -ball_dir_x;
       new_x += ball_dir_x + ball_dir_x;
     }
