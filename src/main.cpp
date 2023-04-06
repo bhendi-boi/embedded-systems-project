@@ -8,17 +8,16 @@
 // declare an SSD1306 oled object connected to I2C
 Adafruit_SSD1306 oled(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
-#define joyX A0
-#define joyY A1
+#define joyX T3
 
 const unsigned long PADDLE_RATE = 33;
 const unsigned long BALL_RATE = 16;
 const uint8_t PADDLE_HEIGHT = 24;
 
-// ? vairbales for storing ball coordinates
+// * vairbales for storing ball coordinates
 uint8_t ball_x = 64, ball_y = 32;
 
-// ? variables for storing ball direction
+// * variables for storing ball direction
 uint8_t ball_dir_x = 1, ball_dir_y = 1;
 
 unsigned long ball_update;
@@ -26,14 +25,14 @@ unsigned long paddle_update;
 const uint8_t CPU_X = 12;
 uint8_t cpu_y = 16;
 
-// ? player coordinates
+// * player coordinates
 const uint8_t PLAYER_X = 115;
 uint8_t player_y = 16;
 
-// ? global state
+// * global state
 int xValue, xMap;
 
-// ? variable for storing score
+// * variable for storing score
 uint8_t score = 0;
 uint8_t CPUScore = 0;
 
@@ -59,21 +58,24 @@ void displayWinner(int winner)
   }
   if (winner == 1)
   {
-    delay(1000);
+    delay(2000);
     oled.setCursor(SCREEN_HEIGHT / 2, SCREEN_WIDTH / 2);
-    oled.println("You Won :)");
+    oled.print("You Won :)");
     oled.display();
-    delay(5000);
+    delay(3000);
 
     return;
   }
   else
   {
-    delay(1000);
-    oled.setCursor(SCREEN_HEIGHT / 2, SCREEN_WIDTH / 2);
-    oled.println("You Lose :'(");
+    delay(2000);
+    oled.clearDisplay();
+    // oled.setCursor(SCREEN_HEIGHT / 2, SCREEN_WIDTH / 2);
+    // oled.setTextColor(WHITE);
+    // oled.print("L");
+    oled.fillRoundRect(10, 10, 20, 20, 2, WHITE);
     oled.display();
-    delay(5000);
+    delay(3000);
     return;
   }
 }
@@ -127,8 +129,8 @@ void setup()
 
 void loop()
 {
-  // ? determining winner and resetting thr game if a
-  // ? winner is found
+  // * determining winner and resetting thr game if a
+  // * winner is found
   int winner = findWinner();
   displayWinner(winner);
   reset(&winner);
@@ -140,8 +142,8 @@ void loop()
   bool update = false;
   unsigned long time = millis();
 
-  // ? -1 represents no change
-  // ? 0 represents down and 1 represnts up
+  // * -1 represents no change
+  // * 0 represents down and 1 represnts up
   int up_state = 0;
   int down_state = 0;
   up_state = xMap == 3 ? -1 : xMap > 3 ? 1
