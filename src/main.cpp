@@ -10,7 +10,7 @@ Adafruit_SSD1306 oled(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
 #define joyX T3
 
-const unsigned long PADDLE_RATE = 33;
+const unsigned long PADDLE_RATE = 48;
 const unsigned long BALL_RATE = 16;
 const uint8_t PADDLE_HEIGHT = 24;
 
@@ -102,6 +102,17 @@ void reset(int *winner)
   ball_dir_y = 1;
 }
 
+void clearingScreenForDispalyingScore()
+{
+  for (int i = (SCREEN_WIDTH / 2) - 10; i < 20; i++)
+  {
+    for (int j = 10; j < 20; j++)
+    {
+      oled.drawPixel(i, j, WHITE);
+    }
+  }
+}
+
 void setup()
 {
   // put your setup code here, to run once:
@@ -137,8 +148,7 @@ void loop()
 
   // ? input from joystick
   xValue = analogRead(joyX);
-  xMap = map(xValue, 0, 1023, 0, 7);
-
+  xMap = map(xValue, 0, 4095, 0, 7);
   bool update = false;
   unsigned long time = millis();
 
@@ -151,9 +161,9 @@ void loop()
   down_state = up_state == -1 ? -1 : !up_state;
 
   // ? displaying score
-  oled.setCursor(SCREEN_WIDTH / 2, 10);
-  // oled.println(score);
-  Serial.print(score);
+  clearingScreenForDispalyingScore();
+  oled.setCursor(SCREEN_WIDTH / 2 - 10, 10);
+  oled.printf("%d | %d", CPUScore, score);
 
   if (time > ball_update)
   {
