@@ -60,20 +60,16 @@ void displayWinner(int winner)
   {
     delay(2000);
     oled.setCursor(SCREEN_HEIGHT / 2, SCREEN_WIDTH / 2);
-    oled.print("You Won :)");
+    oled.println("You Won :)");
     oled.display();
     delay(3000);
-
     return;
   }
   else
   {
     delay(2000);
-    oled.clearDisplay();
-    // oled.setCursor(SCREEN_HEIGHT / 2, SCREEN_WIDTH / 2);
-    // oled.setTextColor(WHITE);
-    // oled.print("L");
-    oled.fillRoundRect(10, 10, 20, 20, 2, WHITE);
+    oled.setCursor(SCREEN_HEIGHT / 2, SCREEN_WIDTH / 2);
+    oled.println("You lose");
     oled.display();
     delay(3000);
     return;
@@ -100,17 +96,6 @@ void reset(int *winner)
   ball_y = 32;
   ball_dir_x = 1;
   ball_dir_y = 1;
-}
-
-void clearingScreenForDispalyingScore()
-{
-  for (int i = (SCREEN_WIDTH / 2) - 10; i < 20; i++)
-  {
-    for (int j = 10; j < 20; j++)
-    {
-      oled.drawPixel(i, j, WHITE);
-    }
-  }
 }
 
 void setup()
@@ -159,11 +144,6 @@ void loop()
   up_state = xMap == 3 ? -1 : xMap > 3 ? 1
                                        : 0;
   down_state = up_state == -1 ? -1 : !up_state;
-
-  // ? displaying score
-  clearingScreenForDispalyingScore();
-  oled.setCursor(SCREEN_WIDTH / 2 - 10, 10);
-  oled.printf("%d | %d", CPUScore, score);
 
   if (time > ball_update)
   {
