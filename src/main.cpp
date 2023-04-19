@@ -39,6 +39,8 @@ int xValue, xMap;
 // * variable for storing score
 uint8_t score = 0;
 uint8_t CPUScore = 0;
+uint8_t prevScore = 0;
+uint8_t prevCPUScore = 0;
 
 int findWinner()
 {
@@ -78,6 +80,26 @@ void displayWinner(int winner)
     delay(3000);
     return;
   }
+}
+
+void displayScore()
+{
+  if (CPUScore != prevCPUScore || score != prevScore)
+  {
+    for (int i = SCREEN_WIDTH / 2 - 20; i < SCREEN_WIDTH / 2 + 20; i++)
+    {
+      for (int j = 10; j < 20; j++)
+      {
+        oled.drawPixel(i, j, BLACK);
+      }
+    }
+    Serial.println("Score Board updated");
+    oled.display();
+    delay(10);
+  }
+  oled.setCursor((SCREEN_WIDTH / 2) - 10, 10);
+  oled.printf("%d | %d", CPUScore, score);
+  oled.display();
 }
 
 void reset(int *winner)
@@ -132,6 +154,9 @@ void loop()
 {
   // * determining winner and resetting thr game if a
   // * winner is found
+  displayScore();
+  prevScore = score;
+  prevCPUScore = CPUScore;
   int winner = findWinner();
   displayWinner(winner);
   reset(&winner);
