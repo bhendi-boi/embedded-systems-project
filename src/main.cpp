@@ -100,6 +100,7 @@ void reset(int *winner)
   ball_y = 32;
   ball_dir_x = 1;
   ball_dir_y = 1;
+  oled.clearDisplay();
 }
 
 void setup()
