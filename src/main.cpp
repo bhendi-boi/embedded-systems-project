@@ -64,18 +64,34 @@ void displayWinner(int winner)
   }
   if (winner == 1)
   {
-    delay(2000);
-    oled.setCursor(SCREEN_HEIGHT / 2, SCREEN_WIDTH / 2);
-    oled.println("You Won :)");
+    for (int i = SCREEN_WIDTH / 2 - 20; i < SCREEN_WIDTH / 2 + 20; i++)
+    {
+      for (int j = 10; j < 20; j++)
+      {
+        oled.drawPixel(i, j, BLACK);
+      }
+    }
+    oled.display();
+    delay(10);
+    oled.setCursor((SCREEN_WIDTH / 2) - 25, 10);
+    oled.printf("You Won :)");
     oled.display();
     delay(3000);
     return;
   }
   else
   {
-    delay(2000);
-    oled.setCursor(SCREEN_HEIGHT / 2, SCREEN_WIDTH / 2);
-    oled.println("You lose");
+    for (int i = SCREEN_WIDTH / 2 - 20; i < SCREEN_WIDTH / 2 + 20; i++)
+    {
+      for (int j = 10; j < 20; j++)
+      {
+        oled.drawPixel(i, j, BLACK);
+      }
+    }
+    oled.display();
+    delay(10);
+    oled.setCursor((SCREEN_WIDTH / 2) - 25, 10);
+    oled.printf("You Lose:(");
     oled.display();
     delay(3000);
     return;
@@ -183,7 +199,8 @@ void loop()
     // Check if we hit the vertical walls
     if (new_x == 0 || new_x == 127)
     {
-      new_x == 127 ? score++ : CPUScore++;
+      // ? ball touched right most pixel CPU scores
+      new_x == 127 ? CPUScore++ : score++;
       ball_dir_x = -ball_dir_x;
       new_x += ball_dir_x + ball_dir_x;
     }
