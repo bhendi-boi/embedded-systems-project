@@ -3,6 +3,10 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
+// GPIO 22 I2C SCL
+// GPIO 21 I2C SDA
+// T3 GPIO 15
+
 #define SCREEN_WIDTH 128 // OLED oled width,  in pixels
 #define SCREEN_HEIGHT 64 // OLED oled height, in pixels
 // declare an SSD1306 oled object connected to I2C
