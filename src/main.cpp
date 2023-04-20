@@ -46,11 +46,11 @@ uint8_t prevscore_L = 0;
 
 int findWinner()
 {
-  if (score_R >= 3)
+  if (score_R >= 11)
   {
     return 1;
   }
-  if (score_L >= 3)
+  if (score_L >= 11)
   {
     return 0;
   }
@@ -76,7 +76,7 @@ void displayWinner(int winner)
     oled.display();
     delay(10);
     oled.setCursor((SCREEN_WIDTH / 2) - 25, 10);
-    oled.printf("Right Won!");
+    oled.printf("Right Won !");
     oled.display();
     delay(3000);
     return;
@@ -93,7 +93,7 @@ void displayWinner(int winner)
     oled.display();
     delay(10);
     oled.setCursor((SCREEN_WIDTH / 2) - 25, 10);
-    oled.printf("Left Won!");
+    oled.printf("Left Won !");
     oled.display();
     delay(3000);
     return;
