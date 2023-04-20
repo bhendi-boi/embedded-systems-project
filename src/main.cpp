@@ -16,7 +16,7 @@ Adafruit_SSD1306 oled(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 #define joyL T0
 
 const unsigned long PADDLE_RATE = 48;
-const unsigned long BALL_RATE = 16;
+const unsigned long BALL_RATE = 8;
 const uint8_t PADDLE_HEIGHT = 24;
 
 // * vairbales for storing ball coordinates
@@ -43,7 +43,7 @@ uint8_t score_R = 0;
 uint8_t score_L = 0;
 uint8_t prevscore_R = 0;
 uint8_t prevscore_L = 0;
-#define MAX_SCORE 11
+#define MAX_SCORE 21
 
 int findWinner()
 {
