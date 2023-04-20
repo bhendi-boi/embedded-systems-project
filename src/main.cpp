@@ -43,21 +43,21 @@ uint8_t score_R = 0;
 uint8_t score_L = 0;
 uint8_t prevscore_R = 0;
 uint8_t prevscore_L = 0;
+#define MAX_SCORE 11
 
 int findWinner()
 {
-  if (score_R >= 11)
+  if (score_R >= MAX_SCORE)
   {
     return 1;
   }
-  if (score_L >= 11)
+  if (score_L >= MAX_SCORE)
   {
     return 0;
   }
   return -1;
 }
 
-// ! TODO make this function display the winner
 void displayWinner(int winner)
 {
   if (winner == -1)
